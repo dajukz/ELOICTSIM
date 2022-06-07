@@ -7,6 +7,15 @@ package logica.enums;
  * @version 30/05/2022
  */
 public enum Periode {
-    SEM_1,
-    SEM_2;
+    SEM1,
+    SEM2;
+
+    @Override
+    public String toString() {
+        switch (this) {
+            case SEM1 -> { return "Semester 1"; }
+            case SEM2 -> { return "Semester 2"; }
+            default -> { return null; }
+        }
+    }
 }

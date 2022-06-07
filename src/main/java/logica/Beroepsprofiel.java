@@ -37,4 +37,14 @@ public class Beroepsprofiel {
     public Integer getProfielId() {
         return id;
     }
+
+
+    @Override
+    public String toString() {
+        return "Beroepsprofiel{" +
+                "id=" + id +
+                ", naam=" + naam +
+                ", verplichteVakken=" + verplichteVakken +
+                '}';
+    }
 }

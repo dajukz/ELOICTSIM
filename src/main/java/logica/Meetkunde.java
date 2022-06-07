@@ -81,8 +81,4 @@ public class Meetkunde {
                 cirkelOverlaptMetLijnstuk((xr + br), (yr - hr), xr, (yr - hr), xc, yc, straal) /*RO>LO*/ ||
                 cirkelOverlaptMetLijnstuk(xr, (yr - hr), xr, yr, xc, yc, straal) /*LO>LB*/;
     }
-
-    /*public static void checkOverlap() {
-        while (cirkelOverlaptMetRechthoek(*//*Hoe moet ik deze callen*//*)) ; check overlap in GUI, niet in meetkunde denk ik
-    }*/
 }
