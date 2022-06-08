@@ -34,7 +34,7 @@ public class PersoonService {
      * @return Lijst van personen
      * @throws SQLException
      */
-    private static List<Persoon> readPersons() throws SQLException {
+    private static List<Persoon> readPersonen() throws SQLException {
         List<Persoon> persons = new ArrayList<>();
         PreparedStatement statement = null;
         try {
@@ -156,7 +156,7 @@ public class PersoonService {
     public static List<Persoon> getPersons() throws SQLException {
         // bij voorkeur wordt deze lijst ook ge-cache-t.
         if (persons==null) {
-            persons = readPersons();
+            persons = readPersonen();
         }
         // de lijst van deze instance teruggeven.
         return persons;

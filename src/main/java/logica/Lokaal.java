@@ -47,4 +47,18 @@ public class Lokaal {
     public Integer getLengte() {
         return lengte;
     }
+
+    @Override
+    public String toString() {
+        return "Lokaal{" +
+                "id=" + id +
+                ", naam='" + naam + '\'' +
+                ", lokaalcode='" + lokaalcode + '\'' +
+                ", x=" + x +
+                ", y=" + y +
+                ", breedte=" + breedte +
+                ", lengte=" + lengte +
+                ", vakken=" + vakken +
+                '}';
+    }
 }

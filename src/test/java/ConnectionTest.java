@@ -1,7 +1,5 @@
 import data.*;
-import logica.Beroepsprofiel;
-import logica.Persoon;
-import logica.Vak;
+import logica.*;
 import logica.enums.Profiel;
 
 import javax.xml.crypto.Data;
@@ -45,9 +43,15 @@ public class ConnectionTest {
     List<Persoon> personen = PersoonService.getPersons();
     System.out.println(personen.size());
     System.out.println(personen);
-    List<Vak> vakken = VakService.getVakken();
+    List<Lokaal> lokalen = LokaalService.getLokalen();
+    System.out.println(lokalen);
+    List<Deur> deuren = DeurService.getDeuren();
+    System.out.println(deuren);
+    List<Informatiepunt> informatiepunten = InformatiepuntService.getInformatiepunten();
+    System.out.println(informatiepunten);
     List<Beroepsprofiel> beroepsprofielen = BeroepsprofielService.getBeroepsprofielen();
     System.out.println(beroepsprofielen);
+    List<Vak> vakken = VakService.getVakken();
     System.out.println(vakken);
 
     }

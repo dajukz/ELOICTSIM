@@ -15,8 +15,11 @@ public class DataService {
      */
     public static void init() throws SQLException {
         VakService.getVakken();
+        LokaalService.getLokalen();
+        DeurService.getDeuren();
         BeroepsprofielService.getBeroepsprofielen();
         PersoonService.getPersons();
-        //LokaalService.getLokalen() etc, volgorde is belangrijk
+        InformatiepuntService.getInformatiepunten();
+        //todo: void services, waarden worden niet gebruikt =>> voor GUI wel
     }
 }

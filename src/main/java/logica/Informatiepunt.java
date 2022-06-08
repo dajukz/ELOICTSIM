@@ -8,85 +8,71 @@ package logica;
  */
 public class Informatiepunt {
     private Integer id;
-    private Integer lokaal_id;
-    private Integer persoon_id;
+    private Lokaal lokaal;
+    private Persoon persoon;
+    private Integer x;
+    private Integer y;
     private String beschrijving;
-    private Punt punt;
-    private Persoon persoonsInfo;
+//    private Punt punt;
 
-    /*
-    informatiepunt kan ofwel een bordje zijn met info erop ofwel een persoon
-    elk object eigen constructor
-     */
-    public Informatiepunt(int id, int lokaal_id, Punt punt, String beschrijving) {
-        if (id != lokaal_id && id > 0) {
-            this.id = id;
-        } else {
-            throw new IllegalArgumentException("onjuist id");
-        }
-        if (id != lokaal_id && lokaal_id > 0) {
-            this.lokaal_id = lokaal_id;
-        } else {
-            throw new IllegalArgumentException("onjuist lokaal_id");
-        }
-        if (Helper.isValidPoint(punt)) {
-            this.punt = punt;
-        } else {
-            throw new IllegalArgumentException("De coordinaten van het punt zijn fout");
-        }
-        if (!beschrijving.equals("") || beschrijving != null) {
-            this.beschrijving = beschrijving;
-        } else {
-            throw new IllegalArgumentException("Er is geeen beschrijving aanwezig");
-        }
-        //alle objecten aanroepen in gui naar getters, persoon is geen informatiepunt
-        //persoon heeft een informatiepunt, aggregatie?
+    public Informatiepunt(Integer id, Lokaal lokaal, Integer x, Integer y, String beschrijving) {
+        this.id = id;
+        this.lokaal =  lokaal;
+        this.x = x;
+        this.y = y;
+        this.beschrijving = beschrijving;
     }
-    public Informatiepunt(int id, int persoon_id, Punt punt, String beschrijving, Persoon persoonsInfo) {
-        if (id != persoon_id && id > 0) {
-            this.id = id;
-        } else {
-            throw new IllegalArgumentException("onjuist id");
-        }
-        if (id != persoon_id && persoon_id > 0) {
-            this.persoon_id = lokaal_id;
-        } else {
-            throw new IllegalArgumentException("onjuist lokaal_id");
-        }
-        if (Helper.isValidPoint(punt)) {
-            this.punt = punt;
-        } else {
-            throw new IllegalArgumentException("De coordinaten van het punt zijn fout");
-        }
-        if (!beschrijving.equals("") || beschrijving != null) {
-            this.beschrijving = beschrijving;
-        } else {
-            throw new IllegalArgumentException("Er is geeen beschrijving aanwezig");
-        }
-        this.persoonsInfo = persoonsInfo; //controle uitvoeren in persoon, bij punt ook bekijken
+    public Informatiepunt(Integer id, Persoon persoon, Integer x, Integer y, String beschrijving) {
+        this.id = id;
+        this.persoon = persoon;
+        this.x = x;
+        this.y = y;
+        this.beschrijving = beschrijving;
     }
 
     protected int getId() {
         return id;
     }
 
-    public Integer getLokaal_id() {
-        return lokaal_id;
+    public Lokaal getLokaal() {
+        return lokaal;
     }
 
-    public Integer getPersoon_id() {
-        return persoon_id;
+    public Integer getX() {
+        return x;
+    }
+
+    public Integer getY() {
+        return y;
+    }
+
+    public Persoon getPersoon() {
+        return persoon;
     }
 
     public String getBeschrijving() {
         return beschrijving;
     }
 
-    public Punt getPunt() {
-        return punt;
-    }
-
-    public Persoon getPersoonsInfo() {
-        return persoonsInfo;
+    @Override
+    public String toString() {
+        if (this.persoon == null) {
+            return "Informatiepunt{" +
+                    "id=" + id +
+                    ", lokaal=" + lokaal +
+                    ", x=" + x +
+                    ", y=" + y +
+                    ", beschrijving='" + beschrijving + '\'' +
+                    '}';
+        } else if (this.lokaal == null){
+            return "Informatiepunt{" +
+                    "id=" + id +
+                    ", persoon=" + persoon +
+                    ", x=" + x +
+                    ", y=" + y +
+                    ", beschrijving='" + beschrijving + '\'' +
+                    '}';
+        }
+        else return null;
     }
 }
