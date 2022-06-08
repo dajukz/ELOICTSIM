@@ -34,61 +34,86 @@ public class PersoonService {
      * @return Lijst van personen
      * @throws SQLException
      */
-    private static List<Persoon> readPersons() throws SQLException {
+    private static List<Persoon> readPersonen() throws SQLException {
         List<Persoon> persons = new ArrayList<>();
-        PreparedStatement statement = Datalayer.getInstance().getCon().prepareStatement(SELECTPERSON);
-        ResultSet result = statement.executeQuery();
-        while(result.next()) {
-            Integer id = result.getInt("id");
-            String voornaam = result.getString("voornaam"); // in klasse aanpassen sql is id famn voorn
-            String familienaam = result.getString("familienaam");
-            Integer studentId = result.getInt("student_id");
-            Integer docentId = result.getInt("docent_id");
-            Persoon person = null;
-            if (!studentId.equals(0)) {
-                Integer beroepsprofielId = result.getInt("beroepsprofiel_id");
-                Profiel beroepsprofiel = Profiel.get(beroepsprofielId);
-                Integer inschrijvingsjaar = result.getInt("inschrijvingsjaar");
-                person = new Student(id, voornaam, familienaam, beroepsprofiel, inschrijvingsjaar);
-            } else if (!docentId.equals(0)) {
-                String rol = result.getString("rol");
-                person = new Docent(id, voornaam, familienaam, rol);
+        PreparedStatement statement = null;
+        try {
+            statement = Datalayer.getInstance().getCon().prepareStatement(SELECTPERSON);
+            ResultSet result = statement.executeQuery();
+            while(result.next()) {
+                Integer id = result.getInt("id");
+                String voornaam = result.getString("voornaam"); // in klasse aanpassen sql is id famn voorn
+                String familienaam = result.getString("familienaam");
+                Integer studentId = result.getInt("student_id");
+                Integer docentId = result.getInt("docent_id");
+                Persoon person = null;
+                if (!studentId.equals(0)) {
+                    Integer beroepsprofielId = result.getInt("beroepsprofiel_id");
+                    Profiel beroepsprofiel = Profiel.get(beroepsprofielId);
+                    Integer inschrijvingsjaar = result.getInt("inschrijvingsjaar");
+                    person = new Student(id, voornaam, familienaam, beroepsprofiel, inschrijvingsjaar);
+                } else if (!docentId.equals(0)) {
+                    String rol = result.getString("rol");
+                    person = new Docent(id, voornaam, familienaam, rol);
+                }
+                if (person != null) {
+                    persons.add(person);
+                }
             }
-            if (person != null) {
-                persons.add(person);
+            addStudenten(persons);
+            //todo: same for docent
+            addDocenten(persons);
+            return persons;
+        } catch (SQLException sqlException) {
+            throw new SQLException("iets fout : " + sqlException);
+        } finally {
+            if (statement != null) {
+                statement.close();
             }
         }
-        addStudenten(persons);
-        //todo: same for docent
-        addDocenten(persons);
-        return persons;
     }
 
     private static void addStudenten(List<Persoon> persons) throws SQLException {
-        PreparedStatement studentVakStatement = Datalayer.getInstance().getCon().prepareStatement(SELECTSTUDENTVAKKEN);
-        ResultSet studentVakResult = studentVakStatement.executeQuery();
-        while(studentVakResult.next()) {
-            Integer studentId = studentVakResult.getInt("student_id");
-            Persoon student = findById(persons, studentId);
-            if (student != null) {
-                Integer vakId = studentVakResult.getInt("vak_id");
-                Vak vak = VakService.findById(vakId);
-                if (vak != null) {
-                    student.addVak(vak);
+        PreparedStatement studentVakStatement = null;
+        try {
+            studentVakStatement = Datalayer.getInstance().getCon().prepareStatement(SELECTSTUDENTVAKKEN);
+            ResultSet studentVakResult = studentVakStatement.executeQuery();
+            while(studentVakResult.next()) {
+                Integer studentId = studentVakResult.getInt("student_id");
+                Persoon student = findById(persons, studentId);
+                if (student != null) {
+                    Integer vakId = studentVakResult.getInt("vak_id");
+                    Vak vak = VakService.findById(vakId);
+                    if (vak != null) {
+                        student.addVak(vak);
+                    } else {
+                        throw new RuntimeException("unknown vak " + vakId);
+                    }
                 } else {
-                    throw new RuntimeException("unknown vak " + vakId);
+                    throw new RuntimeException("unknown student " + studentId);
                 }
-            } else {
-                throw new RuntimeException("unknown student " + studentId);
+            }
+            addVerplichteVakken(persons);
+        } catch (SQLException sqlException) {
+            throw new SQLException("iets fout : " + sqlException);
+        } finally {
+            if (studentVakStatement != null) {
+                studentVakStatement.close();
             }
         }
-        addVerplichteVakken(persons);
+        //todo: voor data editor insert preparedstatement
+        //todo: bindings insert into .... (?, ?, ?)
+        /*
+        *insert into person (naam, voornaam) values  ("henk", "a");
+        select id from person where naam = "henk" and voornaam = "a";
+        insert into studenten (id, beroepsprofiel, inschrijvingsjaar) values ((select id from person where naam = "henk" and voornaam = "a"),  "ICT", 2012);
+         */
     }
 
     private static void addVerplichteVakken(List<Persoon> persons) throws SQLException {
         List<Beroepsprofiel> profielen = BeroepsprofielService.getBeroepsprofielen();
         for (Persoon p: persons) {
-            if (p instanceof Student s) {
+            if (p instanceof Student s) {//todo: beroepsprofiel service methode
                 Profiel profiel = s.getBeroepsprofiel();
                 for (Beroepsprofiel beroepsprofiel: profielen) {
                     if (profiel == beroepsprofiel.getNaam()) {
@@ -100,21 +125,30 @@ public class PersoonService {
     }
 
     private static void addDocenten(List<Persoon> persons) throws SQLException {
-        PreparedStatement docentVakStatement = Datalayer.getInstance().getCon().prepareStatement(SELECTDOCENTVAKKEN);
-        ResultSet docentVakResult = docentVakStatement.executeQuery();
-        while (docentVakResult.next()) {
-            Integer docentId = docentVakResult.getInt("docent_id");
-            Persoon docent = findById(persons, docentId);
-            if (docent != null) {
-                Integer vakId = docentVakResult.getInt("vak_id");
-                Vak vak = VakService.findById(vakId);
-                if (vak != null) {
-                    docent.addVak(vak);
+        PreparedStatement docentVakStatement = null;
+        try {
+            docentVakStatement = Datalayer.getInstance().getCon().prepareStatement(SELECTDOCENTVAKKEN);
+            ResultSet docentVakResult = docentVakStatement.executeQuery();
+            while (docentVakResult.next()) {
+                Integer docentId = docentVakResult.getInt("docent_id");
+                Persoon docent = findById(persons, docentId);
+                if (docent != null) {
+                    Integer vakId = docentVakResult.getInt("vak_id");
+                    Vak vak = VakService.findById(vakId);
+                    if (vak != null) {
+                        docent.addVak(vak);
+                    } else {
+                        throw new RuntimeException("unknown vak at id: " + vakId);
+                    }
                 } else {
-                    throw new RuntimeException("unknown vak at id: " + vakId);
+                    throw new RuntimeException("unknown docent at id: " + docentId);
                 }
-            } else {
-                throw new RuntimeException("unknown docent at id: " + docentId);
+            }
+        } catch (SQLException sqlException) {
+            throw new SQLException("iets fout" + sqlException);
+        } finally {
+            if (docentVakStatement != null) {
+                docentVakStatement.close();
             }
         }
     }
@@ -122,7 +156,7 @@ public class PersoonService {
     public static List<Persoon> getPersons() throws SQLException {
         // bij voorkeur wordt deze lijst ook ge-cache-t.
         if (persons==null) {
-            persons = readPersons();
+            persons = readPersonen();
         }
         // de lijst van deze instance teruggeven.
         return persons;

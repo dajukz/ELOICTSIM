@@ -16,12 +16,15 @@ import java.util.*;
  * @version 24/05/2022
  */
 public class VakService {
+    //todo: sql puntcomma's checken (onnodig)
     private static final String SELECTVAKKEN =
+            "SELECT id, naam, aantal_studiepunten, periode FROM vakken";
+    private static final String SELECTVAKKENMETVERVOLG =
             "SELECT id, naam, aantal_studiepunten, periode, " +
             "vervolgvak_id " +
             "FROM vakken " +
             "LEFT JOIN volgtijdelijkheden " +
-            "ON vakken.id = vak_id;";
+            "ON vakken.id = vak_id;"; //fout vak heeft meer dan 1 vervolgvak
     private static List<Vak> vakken;
 
     /**
@@ -32,22 +35,31 @@ public class VakService {
     private static List<Vak> readVakken() throws SQLException {
         List<Vak> vakken = new ArrayList<>();
         Set<Periode> periodeSet = new HashSet<>();
-        PreparedStatement statement = Datalayer.getInstance().getCon().prepareStatement(SELECTVAKKEN);
-        ResultSet result = statement.executeQuery();
-        while(result.next()) {
-            Integer id = result.getInt("id");
-            Integer vervolgId = result.getInt("vervolgvak_id");
-            String naam = result.getString("naam"); // in klasse aanpassen sql is id famn voorn
-            Integer aantalStp = result.getInt("aantal_studiepunten");
-            String periodes = result.getString("periode");// todo: result.getSet("periode") testen;
-            String[] periodeArr = periodes.split(",");
-            for (String p: periodeArr) {
-                periodeSet.add(Periode.valueOf(p));
+        PreparedStatement statement = null;
+        try {
+            statement = Datalayer.getInstance().getCon().prepareStatement(SELECTVAKKEN);
+            ResultSet result = statement.executeQuery();
+            while(result.next()) {
+                Integer id = result.getInt("id");
+//            Integer vervolgId = result.getInt("vervolgvak_id");
+                String naam = result.getString("naam"); // in klasse aanpassen sql is id famn voorn
+                Integer aantalStp = result.getInt("aantal_studiepunten");
+                String periodes = result.getString("periode");
+                String[] periodeArr = periodes.split(",");
+                for (String p: periodeArr) {
+                    periodeSet.add(Periode.valueOf(p));
+                }
+                Vak vak = new Vak(id, naam, aantalStp, periodeSet);
+                vakken.add(vak);
             }
-            Vak vak = new Vak(id, vervolgId, naam, aantalStp, periodeSet);
-            vakken.add(vak);
+            return vakken;
+        } catch (SQLException sqlException) {
+            throw new SQLException("iets fout : " + sqlException);
+        } finally {
+            if (statement != null) {
+                statement.close();
+            }
         }
-        return vakken;
     }
 
     public static List<Vak> getVakken() throws SQLException {
@@ -68,9 +80,10 @@ public class VakService {
         return null;
     }
 
-    public  static Vak findVervolgvak(Vak vak) throws SQLException {
+    /*public  static Vak findVervolgvak(Vak vak) throws SQLException {
         return findById(vak.getVervolgId());
-    }
+        misschien onndig
+    }*/
 
 
 }

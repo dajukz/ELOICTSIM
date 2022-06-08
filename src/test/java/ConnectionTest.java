@@ -1,9 +1,6 @@
-import data.BeroepsprofielService;
-import data.Datalayer;
-import data.PersoonService;
-import data.VakService;
-import logica.Persoon;
-import logica.Vak;
+import data.*;
+import logica.*;
+import logica.enums.Profiel;
 
 import javax.xml.crypto.Data;
 import java.sql.Connection;
@@ -24,7 +21,7 @@ public class ConnectionTest {
         try {
             Connection con = Datalayer.getInstance().getCon(); //belangrijk singleton maken van datalayer zodat niet elke keer opnieuw aangemaakt wordt
 //            testSQLSelect(con);
-            init(con); //initialisatie eerst doen
+            DataService.init(); //initialisatie eerst doen
             testServices(con);
         } catch (SQLException e) {
             e.printStackTrace();
@@ -42,18 +39,20 @@ public class ConnectionTest {
 //            System.out.println(set.getRow());
     }
 
-    private static void init(Connection con) throws SQLException {
-        VakService.getVakken();
-        PersoonService.getPersons();
-        //LokaalService.getLokalen() etc, volgorde is belangrijk
-    }
-
-        private static void testServices(Connection con) throws SQLException {
-        List<Persoon> personen = PersoonService.getPersons();
-        System.out.println(personen.size());
-        System.out.println(personen);
-        List<Vak> vakken = VakService.getVakken();
-        System.out.println(vakken);
+    private static void testServices(Connection con) throws SQLException {
+    List<Persoon> personen = PersoonService.getPersons();
+    System.out.println(personen.size());
+    System.out.println(personen);
+    List<Lokaal> lokalen = LokaalService.getLokalen();
+    System.out.println(lokalen);
+    List<Deur> deuren = DeurService.getDeuren();
+    System.out.println(deuren);
+    List<Informatiepunt> informatiepunten = InformatiepuntService.getInformatiepunten();
+    System.out.println(informatiepunten);
+    List<Beroepsprofiel> beroepsprofielen = BeroepsprofielService.getBeroepsprofielen();
+    System.out.println(beroepsprofielen);
+    List<Vak> vakken = VakService.getVakken();
+    System.out.println(vakken);
 
     }
 }

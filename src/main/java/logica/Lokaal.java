@@ -1,5 +1,8 @@
 package logica;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class Lokaal {
     //todo: datatypes controleren mysql
     private Integer id;
@@ -9,6 +12,7 @@ public class Lokaal {
     private Integer y;
     private Integer breedte;
     private Integer lengte;
+    private List<Vak> vakken = new ArrayList<>();
 
     public Lokaal(Integer id, String naam, String lokaalcode, Integer x, Integer y, Integer breedte, Integer lengte) {
         this.id = id;
@@ -18,6 +22,10 @@ public class Lokaal {
         this.y = y;
         this.breedte = breedte;
         this.lengte = lengte;
+    }
+
+    public void addVak(Vak vak) {
+        vakken.add(vak);
     }
 
     public Integer getId() {
@@ -38,5 +46,19 @@ public class Lokaal {
 
     public Integer getLengte() {
         return lengte;
+    }
+
+    @Override
+    public String toString() {
+        return "Lokaal{" +
+                "id=" + id +
+                ", naam='" + naam + '\'' +
+                ", lokaalcode='" + lokaalcode + '\'' +
+                ", x=" + x +
+                ", y=" + y +
+                ", breedte=" + breedte +
+                ", lengte=" + lengte +
+                ", vakken=" + vakken +
+                '}';
     }
 }
