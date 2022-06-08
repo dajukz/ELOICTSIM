@@ -77,8 +77,8 @@ public class Meetkunde {
         */
 
         return cirkelOverlaptMetLijnstuk(xr, yr, (xr + br), yr, xc, yc, straal)/*LB>RB*/ ||
-                cirkelOverlaptMetLijnstuk((xr + br), yr, (xr + br), (yr - hr), xc, yc, straal)/*RB>RO*/ ||
-                cirkelOverlaptMetLijnstuk((xr + br), (yr - hr), xr, (yr - hr), xc, yc, straal) /*RO>LO*/ ||
-                cirkelOverlaptMetLijnstuk(xr, (yr - hr), xr, yr, xc, yc, straal) /*LO>LB*/;
+                cirkelOverlaptMetLijnstuk((xr + br), yr, (xr + br), (yr + hr), xc, yc, straal)/*RB>RO*/ ||
+                cirkelOverlaptMetLijnstuk((xr + br), (yr + hr), xr, (yr + hr), xc, yc, straal) /*RO>LO*/ ||
+                cirkelOverlaptMetLijnstuk(xr, (yr + hr), xr, yr, xc, yc, straal) /*LO>LB*/;
     }
 }
