@@ -47,11 +47,7 @@ public class Persoon {
 
     @Override
     public String toString() {
-        return "Persoon{" +
-                "persoonId=" + persoonId +
-                ", voornaam='" + voornaam + '\'' +
-                ", achternaam='" + achternaam + '\'' +
-                ", vakken=" + vakken +
-                '}';
+        return
+                "Naam= " + voornaam + " " + achternaam + '\n';
     }
 }

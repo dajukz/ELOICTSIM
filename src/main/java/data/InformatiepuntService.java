@@ -36,14 +36,10 @@ public class InformatiepuntService {
                 Informatiepunt informatiepunt = null;
                 if (!lokaalId.equals(0)) {
                     Lokaal lokaal = LokaalService.findById(lokaalId);
-                    System.out.println(lokaal);
                     informatiepunt = new Informatiepunt(id, lokaal, x, y, beschrijving);
-                    System.out.println(informatiepunt);
                 } else if (!persoonId.equals(0)) {
                     Persoon persoon = PersoonService.findById(persoonId);
-                    System.out.println(persoon);
                     informatiepunt = new Informatiepunt(id, persoon, x, y, beschrijving);
-                    System.out.println(informatiepunt);
                 }
                 informatiepunten.add(informatiepunt);
             }
@@ -62,5 +58,18 @@ public class InformatiepuntService {
             informatiepunten = readInformatiepunten();
         }
         return informatiepunten;
+    }
+
+    public static Informatiepunt findById(Integer id) throws SQLException {
+        return findById(getInformatiepunten(), id);
+    }
+
+    private static Informatiepunt findById(List<Informatiepunt> informatiepunten, Integer id) {
+        for (Informatiepunt p: informatiepunten) {
+            if (p.getId().equals(id)) {
+                return p;
+            }
+        }
+        return null;
     }
 }

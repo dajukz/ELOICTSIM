@@ -4,10 +4,7 @@ import data.DataService;
 import data.DeurService;
 import data.InformatiepuntService;
 import data.LokaalService;
-import logica.Deur;
-import logica.Informatiepunt;
-import logica.Lokaal;
-import logica.Meetkunde;
+import logica.*;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
@@ -33,6 +30,14 @@ public class EloictSimGui {
     private JPanel tekenPanel;
     private JLabel titelLabel;
     private JPanel mainPanel;
+    private JPanel panelInfo;
+    private JTextArea korteTextArea;
+    private JLabel lijstLabel;
+    private JLabel langeTekstLabel;
+    private JTextArea lijstTextArea;
+    private JTextArea langeTextArea;
+    private JLabel startLabel;
+    private JTextArea startTextArea;
     private static JFrame frame = new JFrame("ELO-ICT SIM - Youke Thomas");
 
     private Image background;
@@ -62,7 +67,7 @@ public class EloictSimGui {
                                 l.getX(),
                                 l.getY(),
                                 l.getBreedte(),
-                                -l.getLengte(),
+                                l.getLengte(),
                                 x2,
                                 y2,
                                 straal
@@ -72,7 +77,6 @@ public class EloictSimGui {
                             List<Deur> deuren = DeurService.getDeuren();
                             boolean hitDeur = false;
                             for (Deur d : deuren) {
-                                System.out.println("Deur: " + d);
                                 hitDeur = Meetkunde.cirkelOverlaptMetRechthoek(
                                         d.getX1(),
                                         d.getX2(),
@@ -82,6 +86,7 @@ public class EloictSimGui {
                                         y2,
                                         straal+4
                                 );
+                                System.out.println("Deur: " + hitDeur + "\n" + "Muur : " + hitMuur);
                                 if (hitDeur) {
                                     break;
                                 }
@@ -99,8 +104,9 @@ public class EloictSimGui {
                 System.out.println(x + "  " + y);
                 try {
                     List<Informatiepunt> informatiepunten = InformatiepuntService.getInformatiepunten();
+                    boolean hit;
                     for (Informatiepunt p: informatiepunten) {
-                        boolean hit = Meetkunde.cirkelOverlaptMetRechthoek(
+                        hit = Meetkunde.cirkelOverlaptMetRechthoek(
                                 p.getX(),
                                 p.getY(),
                                 32,
@@ -111,13 +117,49 @@ public class EloictSimGui {
                         );
                         if (hit) {
                             System.out.println("DOOD " + p);
-                            titelLabel.setText(p.getBeschrijving());
+                            setmededeling(p, true);
                         }
                     }
+                    hit = false;
                 } catch (SQLException sqlException) {
                     sqlException.printStackTrace();
                 }
                 frame.repaint();
+//                clearMededeling(); todo: fixen
+            }
+
+            private void setmededeling(Informatiepunt p, boolean hit) {
+                if (hit) {
+                    if (p.isPersoon()) {
+                        if (p.getPersoon() instanceof Student s) {
+                            titelLabel.setIcon(studentGroot);
+                            titelLabel.setText("Student");
+                            korteTextArea.setText(s.toString());
+                            lijstLabel.setText("Gevolgde vakken");
+                            StringBuilder lijstText = new StringBuilder("");
+                            for (Vak vak: s.getVakken()) {
+                                lijstText.append(vak.toString()).append("\n");
+                            }
+                            lijstTextArea.setText(lijstText.toString());
+                            langeTekstLabel.setText("Extra");
+                            /*
+                            String[] langeTekstSplit = p.getBeschrijving().split(".");
+                            StringBuilder langeTekst = new StringBuilder("");
+                            for (String text: langeTekstSplit) {
+                                langeTekst.append(text).append("\n");
+                            } todo: fix de tostring
+                            */
+                            langeTextArea.setText(p.getBeschrijving());
+                        } else if (p.getPersoon() instanceof Docent d) {
+                            titelLabel.setIcon(docentGroot);
+                        }
+                    }
+                }
+            }
+
+            private void clearMededeling() {
+                titelLabel.setIcon(null);
+                titelLabel.setText("");
             }
         });
     }
@@ -138,7 +180,7 @@ public class EloictSimGui {
                 g.drawImage(background,0,0,null);
                 Graphics2D g2=(Graphics2D)g;
                 g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-                 
+
                 //Voeg hier je tekenwerk toe
                 drawCirkel(g2);
                 drawLokalen(g2);
@@ -175,12 +217,22 @@ public class EloictSimGui {
                 g2.fillOval(x-(straal+2), y-(straal+2), 2*(straal+2), 2*(straal+2)); //todo:startpunt aanpassen+overlap
             }
 
-            private static void drawInformatiePunten(Graphics2D g2) {
+            private void drawInformatiePunten(Graphics2D g2) {
                 try {
                     List<Informatiepunt> informatiepunten = InformatiepuntService.getInformatiepunten();
                     for (Informatiepunt p: informatiepunten) {
-                        g2.setColor(new Color(107,65,31));
-                        g2.fillRect(p.getX(), p.getY(), 32, 32);
+                        if (p.isPersoon()) {
+                            if (p.getPersoon() instanceof Student s) {
+//                                System.out.println(s);
+                                g2.drawImage(studentKlein, p.getX(), p.getY(), null);
+                            } else if (p.getPersoon() instanceof Docent d){
+//                                System.out.println(d);
+                                g2.drawImage(docentKlein, p.getX(), p.getY(), null);
+
+                            }
+                        } else if (p.isLokaal()) {
+                            g2.drawImage(lokaalKlein ,p.getX(), p.getY(), null);
+                        }
                     }
                 } catch (SQLException e) {
                     e.printStackTrace();
@@ -189,13 +241,6 @@ public class EloictSimGui {
         };
     }
 
-
-
-
-    private static void moveCircle() {
-        x = x+1;
-        y = y+1;
-    }
 
     private static Image laadAfbeelding(String bestand) {
         try {

@@ -3,7 +3,7 @@
   <grid id="27dc6" binding="mainPanel" layout-manager="GridLayoutManager" row-count="2" column-count="1" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
     <margin top="0" left="0" bottom="0" right="0"/>
     <constraints>
-      <xy x="20" y="20" width="1206" height="578"/>
+      <xy x="20" y="20" width="1480" height="1077"/>
     </constraints>
     <properties>
       <focusable value="false"/>
@@ -14,6 +14,7 @@
         <margin top="0" left="0" bottom="0" right="0"/>
         <constraints>
           <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false">
+            <minimum-size width="1193" height="568"/>
             <preferred-size width="1193" height="568"/>
           </grid>
         </constraints>
@@ -21,31 +22,131 @@
         <border type="none"/>
         <children/>
       </grid>
-      <grid id="c2ea" layout-manager="GridLayoutManager" row-count="1" column-count="1" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
+      <grid id="c2ea" binding="panelInfo" layout-manager="GridLayoutManager" row-count="6" column-count="3" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
         <margin top="6" left="6" bottom="6" right="6"/>
         <constraints>
-          <grid row="1" column="0" row-span="1" col-span="1" vsize-policy="2" hsize-policy="3" anchor="2" fill="1" indent="0" use-parent-layout="false"/>
+          <grid row="1" column="0" row-span="1" col-span="1" vsize-policy="2" hsize-policy="3" anchor="2" fill="1" indent="0" use-parent-layout="false">
+            <preferred-size width="-1" height="400"/>
+            <maximum-size width="-1" height="500"/>
+          </grid>
         </constraints>
         <properties>
           <background color="-2892302"/>
+          <enabled value="true"/>
           <focusable value="false"/>
           <foreground color="-14728853"/>
+          <visible value="true"/>
         </properties>
-        <border type="line" title="Mededeling">
+        <border type="line" title="Mededeling" title-justification="1" title-position="2">
           <font/>
           <title-color color="-14728853"/>
           <color color="-14728853"/>
         </border>
         <children>
+          <vspacer id="3dedf">
+            <constraints>
+              <grid row="0" column="1" row-span="6" col-span="1" vsize-policy="6" hsize-policy="1" anchor="0" fill="2" indent="0" use-parent-layout="false">
+                <preferred-size width="22" height="14"/>
+              </grid>
+            </constraints>
+          </vspacer>
+          <component id="d054" class="javax.swing.JLabel" binding="startLabel">
+            <constraints>
+              <grid row="0" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="0" indent="0" use-parent-layout="false">
+                <minimum-size width="500" height="-1"/>
+                <preferred-size width="700" height="-1"/>
+                <maximum-size width="800" height="-1"/>
+              </grid>
+            </constraints>
+            <properties>
+              <font size="16"/>
+              <foreground color="-16766907"/>
+              <labelFor value="357a8"/>
+              <text value=""/>
+            </properties>
+          </component>
+          <component id="4eee4" class="javax.swing.JTextArea" binding="korteTextArea">
+            <constraints>
+              <grid row="1" column="0" row-span="1" col-span="1" vsize-policy="6" hsize-policy="0" anchor="0" fill="3" indent="0" use-parent-layout="false">
+                <preferred-size width="150" height="50"/>
+              </grid>
+            </constraints>
+            <properties>
+              <focusable value="false"/>
+            </properties>
+          </component>
+          <component id="357a8" class="javax.swing.JTextArea" binding="startTextArea">
+            <constraints>
+              <grid row="1" column="2" row-span="1" col-span="1" vsize-policy="6" hsize-policy="0" anchor="0" fill="3" indent="0" use-parent-layout="false">
+                <preferred-size width="150" height="50"/>
+              </grid>
+            </constraints>
+            <properties>
+              <focusable value="false"/>
+            </properties>
+          </component>
+          <component id="934cb" class="javax.swing.JTextArea" binding="lijstTextArea">
+            <constraints>
+              <grid row="3" column="0" row-span="1" col-span="1" vsize-policy="6" hsize-policy="0" anchor="0" fill="3" indent="0" use-parent-layout="false">
+                <preferred-size width="150" height="50"/>
+              </grid>
+            </constraints>
+            <properties>
+              <focusable value="false"/>
+            </properties>
+          </component>
+          <component id="1acdb" class="javax.swing.JLabel" binding="lijstLabel">
+            <constraints>
+              <grid row="2" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="0" indent="0" use-parent-layout="false">
+                <minimum-size width="500" height="-1"/>
+                <preferred-size width="700" height="-1"/>
+                <maximum-size width="800" height="-1"/>
+              </grid>
+            </constraints>
+            <properties>
+              <font size="16"/>
+              <foreground color="-16766907"/>
+              <labelFor value="934cb"/>
+              <text value=""/>
+            </properties>
+          </component>
           <component id="f005a" class="javax.swing.JLabel" binding="titelLabel">
             <constraints>
-              <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+              <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false">
+                <maximum-size width="600" height="-1"/>
+              </grid>
             </constraints>
             <properties>
               <focusable value="false"/>
               <font name="Calibri" size="36" style="1"/>
               <foreground color="-14728853"/>
-              <text value="Voeg hier grafische componenten toe om je informatiepunt op weer te geven. "/>
+              <labelFor value="4eee4"/>
+              <text value=""/>
+            </properties>
+          </component>
+          <component id="5e4d3" class="javax.swing.JLabel" binding="langeTekstLabel">
+            <constraints>
+              <grid row="2" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="0" indent="0" use-parent-layout="false">
+                <minimum-size width="500" height="-1"/>
+                <preferred-size width="700" height="-1"/>
+                <maximum-size width="800" height="-1"/>
+              </grid>
+            </constraints>
+            <properties>
+              <font size="16"/>
+              <foreground color="-16766907"/>
+              <labelFor value="1dbce"/>
+              <text value=""/>
+            </properties>
+          </component>
+          <component id="1dbce" class="javax.swing.JTextArea" binding="langeTextArea">
+            <constraints>
+              <grid row="3" column="2" row-span="1" col-span="1" vsize-policy="6" hsize-policy="0" anchor="0" fill="3" indent="0" use-parent-layout="false">
+                <preferred-size width="150" height="50"/>
+              </grid>
+            </constraints>
+            <properties>
+              <focusable value="false"/>
             </properties>
           </component>
         </children>

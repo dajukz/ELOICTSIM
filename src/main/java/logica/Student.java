@@ -39,9 +39,8 @@ public class Student extends Persoon{
 
     @Override
     public String toString() {
-        return "Student{" + super.toString() + ", " +
-                "beroepsprofiel=" + beroepsprofiel +
-                ", inschrijvingsjaar=" + inschrijvingsjaar +
-                '}';
+        return "" + super.toString() +
+                "Beroepsprofiel= " + beroepsprofiel + "\n" +
+                "Inschrijvingsjaar= " + inschrijvingsjaar;
     }
 }

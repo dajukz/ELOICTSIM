@@ -113,7 +113,7 @@ public class PersoonService {
     private static void addVerplichteVakken(List<Persoon> persons) throws SQLException {
         List<Beroepsprofiel> profielen = BeroepsprofielService.getBeroepsprofielen();
         for (Persoon p: persons) {
-            if (p instanceof Student s) {//todo: beroepsprofiel service methode
+            if (p instanceof Student s) {
                 Profiel profiel = s.getBeroepsprofiel();
                 for (Beroepsprofiel beroepsprofiel: profielen) {
                     if (profiel == beroepsprofiel.getNaam()) {

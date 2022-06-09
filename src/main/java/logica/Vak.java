@@ -47,12 +47,7 @@ public class Vak {
 
     @Override
     public String toString() {
-        return "Vak{" +
-                "id=" + id +
-                //", vervolgId=" + vervolgId +
-                ", naam='" + naam + '\'' +
-                ", aantalStp=" + aantalStp +
-                ", periode=" + periode +
-                '}';
+        return ">" + naam +
+                " (" + aantalStp + ")";
     }
 }
