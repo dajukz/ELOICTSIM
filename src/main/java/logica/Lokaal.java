@@ -32,6 +32,14 @@ public class Lokaal {
         return id;
     }
 
+    public String getNaam() {
+        return naam;
+    }
+
+    public String getLokaalcode() {
+        return lokaalcode;
+    }
+
     public Integer getX() {
         return x;
     }
@@ -46,6 +54,10 @@ public class Lokaal {
 
     public Integer getLengte() {
         return lengte;
+    }
+
+    public List<Vak> getVakken() {
+        return vakken;
     }
 
     @Override

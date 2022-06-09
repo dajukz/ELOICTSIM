@@ -22,8 +22,10 @@ public class Docent extends Persoon{
 
     @Override
     public String toString() {
-        return "Docent{" + super.toString() + ", " +
-                "rol='" + rol + '\'' +
-                '}';
+        if (rol != null) {
+            return "Functie= Docent"+ "\n" +
+                    "rol= " + rol;
+        }
+        return "Functie= Docent" + "\n";
     }
 }

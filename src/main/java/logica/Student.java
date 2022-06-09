@@ -39,7 +39,7 @@ public class Student extends Persoon{
 
     @Override
     public String toString() {
-        return "" + super.toString() +
+        return "Functie= Student" + "\n" +
                 "Beroepsprofiel= " + beroepsprofiel + "\n" +
                 "Inschrijvingsjaar= " + inschrijvingsjaar;
     }

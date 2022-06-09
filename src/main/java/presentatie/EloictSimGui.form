@@ -73,6 +73,7 @@
             </constraints>
             <properties>
               <focusable value="false"/>
+              <lineWrap value="true"/>
             </properties>
           </component>
           <component id="357a8" class="javax.swing.JTextArea" binding="startTextArea">
@@ -83,6 +84,7 @@
             </constraints>
             <properties>
               <focusable value="false"/>
+              <lineWrap value="true"/>
             </properties>
           </component>
           <component id="934cb" class="javax.swing.JTextArea" binding="lijstTextArea">
@@ -93,6 +95,7 @@
             </constraints>
             <properties>
               <focusable value="false"/>
+              <lineWrap value="true"/>
             </properties>
           </component>
           <component id="1acdb" class="javax.swing.JLabel" binding="lijstLabel">
@@ -147,6 +150,7 @@
             </constraints>
             <properties>
               <focusable value="false"/>
+              <lineWrap value="true"/>
             </properties>
           </component>
         </children>
