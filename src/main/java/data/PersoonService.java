@@ -112,8 +112,6 @@ public class PersoonService {
             insertPersonenStatement.executeUpdate();
             insertStudentStatement.executeUpdate();
         } catch (SQLException sqlException) {
-            System.out.println("fout" + student.toString());
-            System.out.println(sqlException);
             con.rollback();
         } finally {
             con.setAutoCommit(autoCommit);
@@ -124,7 +122,7 @@ public class PersoonService {
         Connection con = Datalayer.getInstance().getCon();
         String updatePersoon = "UPDATE personen SET familienaam=?, voornaam=? WHERE id=?;";
         String updateStudent = "UPDATE studenten SET beroepsprofiel_id=?, inschrijvingsjaar=? WHERE id=(SELECT id FROM personen WHERE id=?);";
-        String updateKeuzevakken = "UPDATE keuzevakken SET ;"; //todo
+        String updateKeuzevakken = "UPDATE keuzevakken SET ;";
         PreparedStatement stmt = con.prepareStatement(updateStudent);
         boolean autoCommit = con.getAutoCommit();
         try {
@@ -166,13 +164,6 @@ public class PersoonService {
                 studentVakStatement.close();
             }
         }
-        //todo: voor data editor insert preparedstatement
-        //todo: bindings insert into .... (?, ?, ?)
-        /*
-        *insert into person (naam, voornaam) values  ("henk", "a");
-        select id from person where naam = "henk" and voornaam = "a";
-        insert into studenten (id, beroepsprofiel, inschrijvingsjaar) values ((select id from person where naam = "henk" and voornaam = "a"),  "ICT", 2012);
-         */
     }
 
     private static void addVerplichteVakken(List<Persoon> persons) throws SQLException {

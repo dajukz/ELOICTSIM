@@ -20,6 +20,5 @@ public class DataService {
         BeroepsprofielService.getBeroepsprofielen();
         PersoonService.getPersons();
         InformatiepuntService.getInformatiepunten();
-        //todo: void services, waarden worden niet gebruikt =>> voor GUI wel
     }
 }

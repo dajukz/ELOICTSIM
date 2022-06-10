@@ -12,7 +12,6 @@ import java.util.List;
  * @version 30/05/2022
  */
 public class Beroepsprofiel {
-    //todo: beroepsprofiel maken met verplichte vakken, (beroepsprofiel)binden aan student
     private Integer id;
     private Profiel naam;
     private List<Vak> verplichteVakken = new ArrayList<>();

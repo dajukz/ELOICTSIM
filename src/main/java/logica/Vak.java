@@ -13,14 +13,12 @@ import java.util.Set;
  */
 public class Vak {
     private Integer id;
-    //private Integer vervolgId; //todo: foute implementatie, meerde volgtijdelijkheden
     private String naam;
     private Integer aantalStp;
     private Set<Periode> periode;
 
     public Vak(Integer id, String naam, Integer aantalStp, Set<Periode> periode) {
         this.id = id;
-        //this.vervolgId = vervolgId;
         this.naam = naam;
         this.aantalStp = aantalStp;
         this.periode = periode;
@@ -37,10 +35,6 @@ public class Vak {
         Vak vak = (Vak) o;
         return Objects.equals(getId(), vak.getId()) && Objects.equals(getNaam(), vak.getNaam()) && Objects.equals(getAantalStp(), vak.getAantalStp()) && Objects.equals(getPeriode(), vak.getPeriode());
     }
-
-    /*public Integer getVervolgId() {
-        return vervolgId;
-    }*/
 
     public String getNaam() {
         return naam;

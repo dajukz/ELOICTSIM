@@ -28,7 +28,6 @@ public class DataEditor {
     private JPanel mainPanel;
     private JTextField voornaamTextField;
     private JTextField achternaamTextField;
-    private JTextField beroepsprofielTextField;
     private JLabel voornaamLabel;
     private JTextField inschrijvingsjaarTextField;
     private JList vakkenList;
@@ -78,7 +77,6 @@ public class DataEditor {
                     try {
                         Student student = (Student)PersoonService.findbyNaam(voornaamTextField.getText(), achternaamTextField.getText());
                         Student studentOrigine = (Student)PersoonService.findById(id);
-                        System.out.println("test");
                         if (isDuplicate(student, studentOrigine)) {
                             errorLabel.setForeground(Color.red);
                             errorLabel.setText("er is niets veranderd aan deze student");
@@ -88,7 +86,6 @@ public class DataEditor {
                             errorLabel.setForeground(Color.black);
                             errorLabel.setText("");
                         }
-                        //todo: eerst vakken uitlezen voordat alles weggeschreven wordt anders inconsistentie
                     } catch (SQLException ex) {
                         ex.printStackTrace();
                     }
@@ -123,7 +120,6 @@ public class DataEditor {
                     List<Integer> indexList = new ArrayList<>();
                     for (Vak v: beroepsprofiel.getVerplichteVakken()) {
                         indexList.add(v.getId()-1);
-                        System.out.println(v);
                     }
                     int[] indexen = new int[indexList.size()];
                     for (int i = 0; i < indexList.size(); i++) {
@@ -172,7 +168,6 @@ public class DataEditor {
                 s.addVak(addKeuzeVak(beroepsprofiel, (i+1)));
             }
         }
-        System.out.println(s.getPersoonId() + s.getVoornaam() + " " + s.getAchternaam() + " " + s.getBeroepsprofiel() + " " + s.getInschrijvingsjaar() + " ");
         PersoonService.saveStudent(s);
         hasClickedProfiel = false;
         return null;
@@ -184,14 +179,12 @@ public class DataEditor {
             Beroepsprofiel b = BeroepsprofielService.findbyId(profiel.getValue()+1);
             boolean isKeuzeVak = true;
             for (Vak v: b.getVerplichteVakken()) {
-                System.out.println(v + "\n" + vak);
                 if (vak.equals(v)) {
                     isKeuzeVak = false;
                     break;
                 }
             }
             if (isKeuzeVak) {
-                System.out.println(vakId + " " + vak);
                 return vak;
             }
         } catch (SQLException e) {
@@ -248,7 +241,6 @@ public class DataEditor {
 
     private void appendFields(String[] studententoArr) {
         int index = studentList.getSelectedIndex();
-        System.out.println(studententoArr[index]);
         String[] split = studententoArr[index].split(" ");
         Student s = null;
         try {

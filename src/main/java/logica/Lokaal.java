@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Lokaal {
-    //todo: datatypes controleren mysql
     private Integer id;
     private String naam;
     private String lokaalcode;

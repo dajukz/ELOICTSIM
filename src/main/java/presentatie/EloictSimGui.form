@@ -28,7 +28,7 @@
         <constraints>
           <grid row="1" column="0" row-span="1" col-span="1" vsize-policy="2" hsize-policy="3" anchor="1" fill="1" indent="0" use-parent-layout="false">
             <minimum-size width="-1" height="200"/>
-            <preferred-size width="-1" height="300"/>
+            <preferred-size width="-1" height="400"/>
             <maximum-size width="-1" height="500"/>
           </grid>
         </constraints>
@@ -71,9 +71,9 @@
           </component>
           <component id="4eee4" class="javax.swing.JTextArea" binding="korteTextArea">
             <constraints>
-              <grid row="1" column="0" row-span="1" col-span="1" vsize-policy="2" hsize-policy="0" anchor="0" fill="3" indent="0" use-parent-layout="false">
+              <grid row="1" column="0" row-span="1" col-span="1" vsize-policy="2" hsize-policy="0" anchor="1" fill="1" indent="0" use-parent-layout="false">
                 <minimum-size width="-1" height="30"/>
-                <preferred-size width="150" height="84"/>
+                <preferred-size width="150" height="59"/>
                 <maximum-size width="-1" height="50"/>
               </grid>
             </constraints>
@@ -86,9 +86,9 @@
           </component>
           <component id="357a8" class="javax.swing.JTextArea" binding="startTextArea">
             <constraints>
-              <grid row="1" column="2" row-span="1" col-span="1" vsize-policy="6" hsize-policy="0" anchor="0" fill="3" indent="0" use-parent-layout="false">
+              <grid row="1" column="2" row-span="1" col-span="1" vsize-policy="2" hsize-policy="0" anchor="1" fill="1" indent="0" use-parent-layout="false">
                 <minimum-size width="-1" height="30"/>
-                <preferred-size width="150" height="84"/>
+                <preferred-size width="150" height="59"/>
                 <maximum-size width="-1" height="50"/>
               </grid>
             </constraints>
@@ -126,9 +126,9 @@
           <component id="f005a" class="javax.swing.JLabel" binding="titelLabel">
             <constraints>
               <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false">
-                <minimum-size width="-1" height="50"/>
-                <preferred-size width="-1" height="50"/>
-                <maximum-size width="600" height="50"/>
+                <minimum-size width="-1" height="64"/>
+                <preferred-size width="-1" height="64"/>
+                <maximum-size width="600" height="64"/>
               </grid>
             </constraints>
             <properties>

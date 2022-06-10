@@ -15,7 +15,6 @@ public class Informatiepunt {
     private String beschrijving;
     private boolean isLokaal;
     private boolean isPersoon;
-//    private Punt punt;
 
     public Informatiepunt(Integer id, Lokaal lokaal, Integer x, Integer y, String beschrijving) {
         this.id = id;
