@@ -240,13 +240,22 @@ public class EloictSimGui {
 
             //Het kan nuttig zijn om je tekenwerk op te splitsen en hier methoden toe te voegen om specifieke zaken te tekenen
             private void drawLokalen(Graphics2D g2) {
-                g2.setColor(new Color(0,0,0));
+                g2.setColor(LOKAAL_KLEUR);
+                g2.setStroke(new BasicStroke(8));
                 g2.drawRect(4, 226, 1000,  88);
+                try {
+                    List<Lokaal> lokalen = LokaalService.getLokalen();
+                    for (Lokaal l: lokalen) {
+                        g2.drawRect(l.getX(), l.getY(), l.getBreedte(), l.getLengte());
+                    }
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
             }
 
             private void drawDeuren(Graphics2D g2) {
                 try {
-                    g2.setColor(new Color(200,200,200));
+                    g2.setColor(DEUR_KLEUR);
                     g2.setStroke(new BasicStroke(8));
                     List<Deur> deuren = DeurService.getDeuren();
                     for (Deur d : deuren) {
@@ -264,7 +273,7 @@ public class EloictSimGui {
             }
 
             private void drawCirkel(Graphics2D g2) {
-                g2.setColor(new Color(255,50,50));
+                g2.setColor(SPELER_KLEUR);
                 g2.fillOval(x-(straal+2), y-(straal+2), 2*(straal+2), 2*(straal+2)); //todo:startpunt aanpassen+overlap
             }
 

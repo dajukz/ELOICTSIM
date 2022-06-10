@@ -2,6 +2,7 @@ package logica;
 
 import logica.enums.Periode;
 
+import java.util.Objects;
 import java.util.Set;
 
 /**
@@ -27,6 +28,14 @@ public class Vak {
 
     public Integer getId() {
         return id;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Vak)) return false;
+        Vak vak = (Vak) o;
+        return Objects.equals(getId(), vak.getId()) && Objects.equals(getNaam(), vak.getNaam()) && Objects.equals(getAantalStp(), vak.getAantalStp()) && Objects.equals(getPeriode(), vak.getPeriode());
     }
 
     /*public Integer getVervolgId() {

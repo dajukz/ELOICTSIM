@@ -1,16 +1,20 @@
 package presentatie;
 
+import data.BeroepsprofielService;
 import data.DataService;
 import data.PersoonService;
 import data.VakService;
+import logica.Beroepsprofiel;
 import logica.Student;
 import logica.Vak;
 import logica.enums.Profiel;
 
 import javax.swing.*;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.sql.SQLException;
+import java.time.Year;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -37,8 +41,12 @@ public class DataEditor {
     private JLabel vakkenLabel;
     private JLabel studentenLabel;
     private JComboBox beroepsProfielComboBox;
+    private JLabel errorLabel;
     private List<Vak> vakken;
     private List<Student> studenten;
+    private Integer id;
+    private int[] vakkenId;
+    private boolean hasClickedProfiel = false;
 
     public DataEditor() {
         init();
@@ -66,9 +74,20 @@ public class DataEditor {
                         !inschrijvingsjaarTextField.getText().equals("")
                 ) {
                     if (checkNaam(voornaamTextField) && checkNaam(achternaamTextField) && checkDigit(inschrijvingsjaarTextField))
-                    System.out.println("top");
+                    errorLabel.setText("alle velden in orde");
                     try {
                         Student student = (Student)PersoonService.findbyNaam(voornaamTextField.getText(), achternaamTextField.getText());
+                        Student studentOrigine = (Student)PersoonService.findById(id);
+                        System.out.println("test");
+                        if (isDuplicate(student, studentOrigine)) {
+                            errorLabel.setForeground(Color.red);
+                            errorLabel.setText("er is niets veranderd aan deze student");
+                        } else  if (student == null) {
+                            errorLabel.setText("er is nog geen student ingesteld");
+                        } else {
+                            errorLabel.setForeground(Color.black);
+                            errorLabel.setText("");
+                        }
                         //todo: eerst vakken uitlezen voordat alles weggeschreven wordt anders inconsistentie
                     } catch (SQLException ex) {
                         ex.printStackTrace();
@@ -80,9 +99,126 @@ public class DataEditor {
         nieuweStudentButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-
+                try {
+                    saveStudent();
+                    JTextField temp = saveStudent();
+                    if (temp != null) {
+                        errorLabel.setText(temp.getText() + " is fout.");
+                    } else {
+                        errorLabel.setForeground(Color.green);
+                        errorLabel.setText("invoegen gelukt");
+                    }
+                } catch (SQLException ex) {
+                    ex.printStackTrace();
+                }
             }
         });
+        beroepsProfielComboBox.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                hasClickedProfiel = true;
+                try {
+                    Profiel profiel = Profiel.get(beroepsProfielComboBox.getSelectedIndex()+1);
+                    Beroepsprofiel beroepsprofiel = BeroepsprofielService.findbyId(profiel.getValue()+1);
+                    List<Integer> indexList = new ArrayList<>();
+                    for (Vak v: beroepsprofiel.getVerplichteVakken()) {
+                        indexList.add(v.getId()-1);
+                        System.out.println(v);
+                    }
+                    int[] indexen = new int[indexList.size()];
+                    for (int i = 0; i < indexList.size(); i++) {
+                        indexen[i] = indexList.get(i);
+                    }
+                    vakkenList.setSelectedIndices(indexen);
+                } catch (SQLException ex) {
+                    ex.printStackTrace();
+                }
+            }
+        });
+    }
+
+    private JTextField saveStudent() throws SQLException {
+        String voornaam = "";
+        String achternaam = "";
+        Profiel beroepsprofiel;
+        Integer inschrijvingsjaar = 0;
+        if (checkNaam(voornaamTextField)) {
+            voornaam = voornaamTextField.getText();
+        } else {
+            return voornaamTextField;
+        }
+        if (checkNaam(achternaamTextField)) {
+            achternaam = achternaamTextField.getText();
+        } else {
+            return achternaamTextField;
+        }
+        if (checkDigit(inschrijvingsjaarTextField)) {
+            inschrijvingsjaar = Integer.parseInt(inschrijvingsjaarTextField.getText());
+        } else {
+            return inschrijvingsjaarTextField;
+        } if (!hasClickedProfiel) {
+            return new JTextField("beroepsprofiel");
+        }
+        beroepsprofiel = Profiel.toEnum(beroepsProfielComboBox.getSelectedItem().toString());
+        Student s = new Student(
+                PersoonService.getStudenten().get(PersoonService.getStudenten().size()-1).getPersoonId()+1,
+                voornaam,
+                achternaam,
+                beroepsprofiel,
+                inschrijvingsjaar
+        );
+        for (int i : vakkenList.getSelectedIndices()) {
+            if (addKeuzeVak(beroepsprofiel, (i+1)) != null) {
+                s.addVak(addKeuzeVak(beroepsprofiel, (i+1)));
+            }
+        }
+        System.out.println(s.getPersoonId() + s.getVoornaam() + " " + s.getAchternaam() + " " + s.getBeroepsprofiel() + " " + s.getInschrijvingsjaar() + " ");
+        PersoonService.saveStudent(s);
+        hasClickedProfiel = false;
+        return null;
+    }
+
+    private Vak addKeuzeVak(Profiel profiel, int vakId) {
+        try {
+            Vak vak = VakService.findById(vakId);
+            Beroepsprofiel b = BeroepsprofielService.findbyId(profiel.getValue()+1);
+            boolean isKeuzeVak = true;
+            for (Vak v: b.getVerplichteVakken()) {
+                System.out.println(v + "\n" + vak);
+                if (vak.equals(v)) {
+                    isKeuzeVak = false;
+                    break;
+                }
+            }
+            if (isKeuzeVak) {
+                System.out.println(vakId + " " + vak);
+                return vak;
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return null;
+        }
+        return null;
+    }
+
+    private boolean isDuplicate(Student student, Student studentOrigine) {
+        if (studentOrigine.equals(student) && student !=null) {
+            if (student.getVakken().size() != studentOrigine.getVakken().size()) {
+                List<Boolean> check = new ArrayList<>();
+                for (int i = 0; i < student.getVakken().size(); i++) {
+                    if (student.getVakken().get(i).equals(studentOrigine.getVakken().get(i))) {
+                        check.add(true);
+                    } else {
+                        check.add(false);
+                    }
+                }
+                if (!check.contains(false)) {
+                    return true;
+                }
+                return false;
+            }
+        }
+        return false;
     }
 
     private boolean checkDigit(JTextField inschrijvingsjaarTextField) {
@@ -90,7 +226,8 @@ public class DataEditor {
             inschrijvingsjaarTextField.getText() != null &&
             !inschrijvingsjaarTextField.getText().equals("") &&
             inschrijvingsjaarTextField.getText().matches("\\d+") &&
-            Integer.parseInt(inschrijvingsjaarTextField.getText()) > 1990
+            Integer.parseInt(inschrijvingsjaarTextField.getText()) > 1990 &&
+            Integer.parseInt(inschrijvingsjaarTextField.getText()) <= Year.now().getValue()
         ) {
             return true;
         }
@@ -101,7 +238,7 @@ public class DataEditor {
         if (
             naamField.getText() != null &&
             !naamField.getText().equals("") &&
-            naamField.getText().substring(0, 1).toUpperCase().equals(voornaamTextField.getText().substring(0, 1)) &&
+            naamField.getText().substring(0, 1).toUpperCase().equals(naamField.getText().substring(0, 1)) &&
             naamField.getText().length() >=2
         ) {
             return true;
@@ -116,6 +253,7 @@ public class DataEditor {
         Student s = null;
         try {
             s = (Student)PersoonService.findbyNaam(split[0], split[1]);
+            id = s.getPersoonId();
         } catch (SQLException ex) {
             ex.printStackTrace();
         }
@@ -124,6 +262,15 @@ public class DataEditor {
             achternaamTextField.setText(s.getAchternaam());
             beroepsProfielComboBox.setSelectedIndex(s.getBeroepsprofiel().getValue());
             inschrijvingsjaarTextField.setText(String.valueOf(s.getInschrijvingsjaar()));
+            List<Integer> vakkenIdList = new ArrayList<>();
+            for (Vak v : s.getVakken()) {
+                vakkenIdList.add(v.getId());
+            }
+            vakkenId = new int[vakkenIdList.size()];
+            for (int i = 0; i < vakkenIdList.size(); i++) {
+                vakkenId[i] = vakkenIdList.get(i);
+            }
+            vakkenList.setSelectedIndices(vakkenId);
         }
     }
 

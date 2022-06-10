@@ -24,7 +24,7 @@ public class Docent extends Persoon{
     public String toString() {
         if (rol != null) {
             return "Functie= Docent"+ "\n" +
-                    "rol= " + rol;
+                    "Rol= " + rol;
         }
         return "Functie= Docent" + "\n";
     }

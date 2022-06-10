@@ -73,7 +73,7 @@ public class PersoonService {
         }
     }
 
-    private static void saveStudent(Student student) throws  SQLException {
+    public static void saveStudent(Student student) throws  SQLException {
         Connection con = Datalayer.getInstance().getCon();
         boolean autoCommit = false;
         try {
@@ -105,13 +105,15 @@ public class PersoonService {
                     if (check[i]) {
                         insertKeuzeVakkenStatement.setInt(1, student.getPersoonId());
                         insertKeuzeVakkenStatement.setInt(2, student.getVakken().get(i).getId());
-                        insertKeuzeVakkenStatement.executeQuery();
+                        insertKeuzeVakkenStatement.executeUpdate();
                     }
                 }
             }
-            insertPersonenStatement.executeQuery();
-            insertStudentStatement.executeQuery();
+            insertPersonenStatement.executeUpdate();
+            insertStudentStatement.executeUpdate();
         } catch (SQLException sqlException) {
+            System.out.println("fout" + student.toString());
+            System.out.println(sqlException);
             con.rollback();
         } finally {
             con.setAutoCommit(autoCommit);

@@ -30,6 +30,24 @@ public enum Profiel {
                 .replaceAll("_", " ");
     }
 
+    public static Profiel toEnum(String stringVal) {
+        Profiel profiel = null;
+        final String telCom = "Telecommunications engineer";
+        final String iot = "Internet of things developer";
+        final String netSec = "Network security engineer";
+        final String softDev = "Software ai developer";
+        final String webDev = "Web mobile developer";
+        switch (stringVal) {
+            case telCom -> profiel = TELECOMMUNICATIONS_ENGINEER;
+            case iot -> profiel = INTERNET_OF_THINGS_DEVELOPER;
+            case netSec -> profiel = NETWORK_SECURITY_ENGINEER;
+            case softDev -> profiel = SOFTWARE_AI_DEVELOPER;
+            case webDev -> profiel = WEB_MOBILE_DEVELOPER;
+            default -> profiel = null;
+        }
+        return profiel;
+    }
+
     public static Profiel get(int i) {
         if (i == 0) {
             return null;

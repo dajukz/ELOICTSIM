@@ -31,10 +31,13 @@ public class Student extends Persoon{
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Student student = (Student) o;
-        return beroepsprofiel == student.beroepsprofiel && Objects.equals(inschrijvingsjaar, student.inschrijvingsjaar);
+        if(super.equals(o)) {
+            if (this == o) return true;
+            if (o == null || getClass() != o.getClass()) return false;
+            Student student = (Student) o;
+            return beroepsprofiel == student.beroepsprofiel && Objects.equals(inschrijvingsjaar, student.inschrijvingsjaar);
+        }
+        return false;
     }
 
     @Override
