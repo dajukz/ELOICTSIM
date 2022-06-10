@@ -3,6 +3,7 @@ package data;
 import logica.*;
 import logica.enums.Profiel;
 
+import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -61,7 +62,6 @@ public class PersoonService {
                 }
             }
             addStudenten(persons);
-            //todo: same for docent
             addDocenten(persons);
             return persons;
         } catch (SQLException sqlException) {
@@ -71,6 +71,69 @@ public class PersoonService {
                 statement.close();
             }
         }
+    }
+
+    private static void saveStudent(Student student) throws  SQLException {
+        Connection con = Datalayer.getInstance().getCon();
+        boolean autoCommit = false;
+        try {
+            String insertPerson = "INSERT INTO personen (familienaam, naam) values (?, ?);";
+            PreparedStatement insertPersonenStatement = con.prepareStatement(insertPerson);
+            insertPersonenStatement.setString(1, student.getVoornaam());
+            insertPersonenStatement.setString(2, student.getAchternaam());
+            String insertStudent = "INSERT INTO student (id, beroepsprofiel, inschrijvingsjaar) VALUES ((SELECT MAX(id) FROM personen), ?, ?);";
+            PreparedStatement insertStudentStatement = con.prepareStatement(insertStudent);
+            insertStudentStatement.setInt(1, student.getBeroepsprofiel().getValue());
+            String insertKeuzeVakken = "INSERT INTO keuzevakken (student_id, vak_id) VALUES ( ?, ?)";
+            PreparedStatement insertKeuzeVakkenStatement = con.prepareStatement(insertKeuzeVakken);
+            autoCommit = con.getAutoCommit();
+            con.setAutoCommit(false);
+            for (Beroepsprofiel b : BeroepsprofielService.getBeroepsprofielen()) {
+                boolean[] check = new boolean[student.getVakken().size()];
+                if (b.getNaam().equals(student.getBeroepsprofiel())) {
+                    for (int i = 0; i < student.getVakken().size(); i++) {
+                        for (int j = 0; j < b.getVerplichteVakken().size(); j++) {
+                            if (!student.getVakken().get(i).equals(b.getVerplichteVakken().get(j))) {
+                                check[i] = true;
+                            } else {
+                                check[i] = false;
+                            }
+                        }
+                    }
+                }
+                for (int i = 0; i < check.length; i++) {
+                    if (check[i]) {
+                        insertKeuzeVakkenStatement.setInt(1, student.getPersoonId());
+                        insertKeuzeVakkenStatement.setInt(2, student.getVakken().get(i).getId());
+                        insertKeuzeVakkenStatement.executeQuery();
+                    }
+                }
+            }
+            insertPersonenStatement.executeQuery();
+            insertStudentStatement.executeQuery();
+        } catch (SQLException sqlException) {
+            con.rollback();
+        } finally {
+            con.setAutoCommit(autoCommit);
+        }
+    }
+
+    private static void updateStudent() throws SQLException {
+        Connection con = Datalayer.getInstance().getCon();
+        String updatePersoon = "UPDATE personen SET familienaam=?, voornaam=? WHERE id=?;";
+        String updateStudent = "UPDATE studenten SET beroepsprofiel_id=?, inschrijvingsjaar=? WHERE id=(SELECT id FROM personen WHERE id=?);";
+        String updateKeuzevakken = "UPDATE keuzevakken SET ;"; //todo
+        PreparedStatement stmt = con.prepareStatement(updateStudent);
+        boolean autoCommit = con.getAutoCommit();
+        try {
+            con.setAutoCommit(false);
+            stmt.executeQuery();
+        } catch (SQLException sqlException) {
+            con.rollback();
+        } finally {
+            con.setAutoCommit(autoCommit);
+        }
+
     }
 
     private static void addStudenten(List<Persoon> persons) throws SQLException {
@@ -161,6 +224,16 @@ public class PersoonService {
         // de lijst van deze instance teruggeven.
         return persons;
     }
+    public static List<Student> getStudenten() throws SQLException {
+        List<Persoon> personen = getPersons();
+        List<Student> studenten = new ArrayList<>();
+        for (Persoon p : personen) {
+            if (p instanceof Student s) {
+                studenten.add(s);
+            }
+        }
+        return studenten;
+    }
 
     public static Persoon findById(Integer id) throws SQLException {
         return findById(getPersons(), id);
@@ -175,7 +248,7 @@ public class PersoonService {
         return null;
     }
 
-    public static Persoon findByVoornaam(String voornaam) throws SQLException {
+    public static Persoon findbyNaam(String voornaam, String achternaam) throws SQLException {
         for (Persoon person : getPersons()) {
             if (person.getVoornaam().equals(voornaam)) {
                 return person;

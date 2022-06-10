@@ -12,6 +12,7 @@ import java.util.Objects;
  */
 public class Student extends Persoon{
     private Profiel beroepsprofiel;
+
     private Integer inschrijvingsjaar;
 
     public Student(Integer id, String voornaam, String achternaam, Profiel beroepsprofiel, Integer inschrijvingsjaar) {
@@ -22,6 +23,10 @@ public class Student extends Persoon{
 
     public Profiel getBeroepsprofiel() {
         return beroepsprofiel;
+    }
+
+    public Integer getInschrijvingsjaar() {
+        return inschrijvingsjaar;
     }
 
     @Override
