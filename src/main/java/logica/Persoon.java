@@ -2,6 +2,7 @@ package logica;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * ELOICTSIM; Persoon
@@ -44,14 +45,22 @@ public class Persoon {
         return vakken;
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Persoon)) return false;
+        Persoon persoon = (Persoon) o;
+        return Objects.equals(getPersoonId(), persoon.getPersoonId()) && Objects.equals(getVoornaam(), persoon.getVoornaam()) && Objects.equals(getAchternaam(), persoon.getAchternaam()) && Objects.equals(getVakken(), persoon.getVakken());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getPersoonId(), getVoornaam(), getAchternaam(), getVakken());
+    }
 
     @Override
     public String toString() {
-        return "Persoon{" +
-                "persoonId=" + persoonId +
-                ", voornaam='" + voornaam + '\'' +
-                ", achternaam='" + achternaam + '\'' +
-                ", vakken=" + vakken +
-                '}';
+        return
+                "Naam= " + voornaam + " " + achternaam + '\n';
     }
 }

@@ -12,6 +12,7 @@ import java.util.Objects;
  */
 public class Student extends Persoon{
     private Profiel beroepsprofiel;
+
     private Integer inschrijvingsjaar;
 
     public Student(Integer id, String voornaam, String achternaam, Profiel beroepsprofiel, Integer inschrijvingsjaar) {
@@ -24,12 +25,19 @@ public class Student extends Persoon{
         return beroepsprofiel;
     }
 
+    public Integer getInschrijvingsjaar() {
+        return inschrijvingsjaar;
+    }
+
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Student student = (Student) o;
-        return beroepsprofiel == student.beroepsprofiel && Objects.equals(inschrijvingsjaar, student.inschrijvingsjaar);
+        if(super.equals(o)) {
+            if (this == o) return true;
+            if (o == null || getClass() != o.getClass()) return false;
+            Student student = (Student) o;
+            return beroepsprofiel == student.beroepsprofiel && Objects.equals(inschrijvingsjaar, student.inschrijvingsjaar);
+        }
+        return false;
     }
 
     @Override
@@ -39,9 +47,8 @@ public class Student extends Persoon{
 
     @Override
     public String toString() {
-        return "Student{" + super.toString() + ", " +
-                "beroepsprofiel=" + beroepsprofiel +
-                ", inschrijvingsjaar=" + inschrijvingsjaar +
-                '}';
+        return "Functie= Student" + "\n" +
+                "Beroepsprofiel= " + beroepsprofiel + "\n" +
+                "Inschrijvingsjaar= " + inschrijvingsjaar;
     }
 }

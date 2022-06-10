@@ -13,7 +13,8 @@ public class Informatiepunt {
     private Integer x;
     private Integer y;
     private String beschrijving;
-//    private Punt punt;
+    private boolean isLokaal;
+    private boolean isPersoon;
 
     public Informatiepunt(Integer id, Lokaal lokaal, Integer x, Integer y, String beschrijving) {
         this.id = id;
@@ -21,6 +22,8 @@ public class Informatiepunt {
         this.x = x;
         this.y = y;
         this.beschrijving = beschrijving;
+        this.isLokaal = true;
+        this.isPersoon = false;
     }
     public Informatiepunt(Integer id, Persoon persoon, Integer x, Integer y, String beschrijving) {
         this.id = id;
@@ -28,14 +31,27 @@ public class Informatiepunt {
         this.x = x;
         this.y = y;
         this.beschrijving = beschrijving;
+        this.isPersoon = true;
+        this.isLokaal = false;
     }
 
-    protected int getId() {
+    public Integer getId() {
         return id;
     }
 
     public Lokaal getLokaal() {
+        if (this.lokaal ==null) {
+            return null;
+        }
         return lokaal;
+    }
+
+    public boolean isLokaal() {
+        return isLokaal;
+    }
+
+    public boolean isPersoon() {
+        return isPersoon;
     }
 
     public Integer getX() {
@@ -47,6 +63,9 @@ public class Informatiepunt {
     }
 
     public Persoon getPersoon() {
+        if (this.persoon == null) {
+            return null;
+        }
         return persoon;
     }
 

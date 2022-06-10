@@ -69,13 +69,11 @@ public class Meetkunde {
      * @return true als er een overlap is.
      */
     public static boolean cirkelOverlaptMetRechthoek(int xr, int yr, int br, int hr, int xc, int yc, int straal) {
-        //TODO: overloop de 4 randen van de rechthoek en kijk of je overlapt
-
         /*  voor swing GUI starthoek is LB=> ofwel LB>LO>RO>RB>LB (elk pijltje is een lijnstuk>elk punt wordt 2x gebruikt) of LB>RB>RO>LO>LB maakt een rechthoek(4hoek)
             hieronder is klokwijzer, 2e variant
             logischerwijze is de breedterichting gelijk met breedte scherm=> L<>R= breedte => LB = ( XR, YR ); LO = ( XR, YR-HR ), ..., RO = ( XR+BR, YR-HR)
+            ALLES -HR == +HR Y-as gespiegeld, anders kloppen detecties NIET
         */
-
         return cirkelOverlaptMetLijnstuk(xr, yr, (xr + br), yr, xc, yc, straal)/*LB>RB*/ ||
                 cirkelOverlaptMetLijnstuk((xr + br), yr, (xr + br), (yr + hr), xc, yc, straal)/*RB>RO*/ ||
                 cirkelOverlaptMetLijnstuk((xr + br), (yr + hr), xr, (yr + hr), xc, yc, straal) /*RO>LO*/ ||

@@ -19,12 +19,6 @@ public class VakService {
     //todo: sql puntcomma's checken (onnodig)
     private static final String SELECTVAKKEN =
             "SELECT id, naam, aantal_studiepunten, periode FROM vakken";
-    private static final String SELECTVAKKENMETVERVOLG =
-            "SELECT id, naam, aantal_studiepunten, periode, " +
-            "vervolgvak_id " +
-            "FROM vakken " +
-            "LEFT JOIN volgtijdelijkheden " +
-            "ON vakken.id = vak_id;"; //fout vak heeft meer dan 1 vervolgvak
     private static List<Vak> vakken;
 
     /**
@@ -41,8 +35,7 @@ public class VakService {
             ResultSet result = statement.executeQuery();
             while(result.next()) {
                 Integer id = result.getInt("id");
-//            Integer vervolgId = result.getInt("vervolgvak_id");
-                String naam = result.getString("naam"); // in klasse aanpassen sql is id famn voorn
+                String naam = result.getString("naam");
                 Integer aantalStp = result.getInt("aantal_studiepunten");
                 String periodes = result.getString("periode");
                 String[] periodeArr = periodes.split(",");
@@ -63,11 +56,9 @@ public class VakService {
     }
 
     public static List<Vak> getVakken() throws SQLException {
-        // bij voorkeur wordt deze lijst ook ge-cache-t.
         if (vakken==null) {
             vakken = readVakken();
         }
-        // de lijst van deze instance teruggeven.
         return vakken;
     }
 
@@ -79,11 +70,4 @@ public class VakService {
         }
         return null;
     }
-
-    /*public  static Vak findVervolgvak(Vak vak) throws SQLException {
-        return findById(vak.getVervolgId());
-        misschien onndig
-    }*/
-
-
 }

@@ -4,10 +4,7 @@ import data.DataService;
 import data.DeurService;
 import data.InformatiepuntService;
 import data.LokaalService;
-import logica.Deur;
-import logica.Informatiepunt;
-import logica.Lokaal;
-import logica.Meetkunde;
+import logica.*;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
@@ -26,13 +23,21 @@ public class EloictSimGui {
     private static final Color LOKAAL_KLEUR =new Color(31,65,107);//Nachtblauw
     private static final Color DEUR_KLEUR =new Color(211,221,242);//Mistblauw
 
-    private static int x = 20;
-    private static int y = 260;
+    private static int x = 40;
+    private static int y = 290;
     private static int straal = 5;
 
     private JPanel tekenPanel;
     private JLabel titelLabel;
     private JPanel mainPanel;
+    private JPanel panelInfo;
+    private JTextArea korteTextArea;
+    private JLabel lijstLabel;
+    private JLabel langeTekstLabel;
+    private JTextArea lijstTextArea;
+    private JTextArea langeTextArea;
+    private JLabel startLabel;
+    private JTextArea startTextArea;
     private static JFrame frame = new JFrame("ELO-ICT SIM - Youke Thomas");
 
     private Image background;
@@ -62,17 +67,15 @@ public class EloictSimGui {
                                 l.getX(),
                                 l.getY(),
                                 l.getBreedte(),
-                                -l.getLengte(),
+                                l.getLengte(),
                                 x2,
                                 y2,
                                 straal
                         );
                         if (hitMuur) {
-                            System.out.println("levend " + l);
                             List<Deur> deuren = DeurService.getDeuren();
                             boolean hitDeur = false;
                             for (Deur d : deuren) {
-                                System.out.println("Deur: " + d);
                                 hitDeur = Meetkunde.cirkelOverlaptMetRechthoek(
                                         d.getX1(),
                                         d.getX2(),
@@ -94,13 +97,13 @@ public class EloictSimGui {
                     x = x2;
                     y = y2;
                 } catch (SQLException ex) {
-                    ex.printStackTrace(); //todo: popup foutmelding genereren
+                    ex.printStackTrace();
                 }
-                System.out.println(x + "  " + y);
                 try {
                     List<Informatiepunt> informatiepunten = InformatiepuntService.getInformatiepunten();
+                    boolean hit;
                     for (Informatiepunt p: informatiepunten) {
-                        boolean hit = Meetkunde.cirkelOverlaptMetRechthoek(
+                        hit = Meetkunde.cirkelOverlaptMetRechthoek(
                                 p.getX(),
                                 p.getY(),
                                 32,
@@ -110,14 +113,83 @@ public class EloictSimGui {
                                 straal
                         );
                         if (hit) {
-                            System.out.println("DOOD " + p);
-                            titelLabel.setText(p.getBeschrijving());
+                            setmededeling(p);
                         }
                     }
+                    hit = false;
                 } catch (SQLException sqlException) {
                     sqlException.printStackTrace();
                 }
                 frame.repaint();
+            }
+
+            private void setmededeling(Informatiepunt p) {
+                if (p.isPersoon()) {
+                    StringBuilder stringBuilder = new StringBuilder("");
+                    if (p.getPersoon() instanceof Student s) {
+                        titelLabel.setIcon(studentGroot);
+                        titelLabel.setText(
+                                stringBuilder
+                                .append(s.getVoornaam().substring(0, 1).toUpperCase())
+                                .append(s.getVoornaam().substring(1))
+                                .append(" ")
+                                .append(s.getAchternaam().substring(0, 1).toUpperCase())
+                                .append(s.getAchternaam().substring(1))
+                                .toString()
+                        );
+                        korteTextArea.setText(s.toString());
+                        lijstLabel.setText("Gevolgde vakken");
+                        StringBuilder lijstText = new StringBuilder("");
+                        for (Vak vak: s.getVakken()) {
+                            lijstText.append(vak.toString()).append("\n");
+                        }
+                        lijstTextArea.setText(lijstText.toString());
+                        langeTekstLabel.setText("Extra over " + stringBuilder);
+                        langeTextArea.setText(p.getBeschrijving());
+                    } else if (p.getPersoon() instanceof Docent d) {
+                        titelLabel.setIcon(docentGroot);
+                        titelLabel.setText(
+                                stringBuilder
+                                .append(d.getVoornaam().substring(0, 1).toUpperCase())
+                                .append(d.getVoornaam().substring(1))
+                                .append(" ")
+                                .append(d.getAchternaam().substring(0, 1).toUpperCase())
+                                .append(d.getAchternaam().substring(1))
+                                .toString()
+                        );
+                        korteTextArea.setText(d.toString());
+                        lijstLabel.setText("Lessen gegeven");
+                        StringBuilder lijstText = new StringBuilder("");
+                        for (Vak vak: d.getVakken()) {
+                            lijstText.append(vak.toString()).append("\n");
+                        }
+                        lijstTextArea.setText(lijstText.toString());
+                        langeTekstLabel.setText("Extra over " + stringBuilder);
+                        langeTextArea.setText(p.getBeschrijving());
+                    }
+                } else if (p.isLokaal()) {
+                    if (p.getLokaal().getId().equals(14)) {
+                        startLabel.setText("Info start spel");
+                        startTextArea.setText(p.getBeschrijving());
+                    }
+                    StringBuilder stringBuilder = new StringBuilder("");
+                    titelLabel.setIcon(lokaalGroot);
+                    titelLabel.setText(
+                            stringBuilder
+                            .append(p.getLokaal().getNaam().substring(0, 1).toUpperCase())
+                            .append(p.getLokaal().getNaam().substring(1))
+                            .toString()
+                    );
+                    korteTextArea.setText(p.getLokaal().getLokaalcode());
+                    lijstLabel.setText("Lessen gegeven");
+                    StringBuilder lijstText = new StringBuilder("");
+                    for (Vak vak: p.getLokaal().getVakken()) {
+                        lijstText.append(vak.toString()).append("\n");
+                    }
+                    lijstTextArea.setText(lijstText.toString());
+                    langeTekstLabel.setText("Extra over " + stringBuilder);
+                    langeTextArea.setText(p.getBeschrijving());
+                }
             }
         });
     }
@@ -138,23 +210,33 @@ public class EloictSimGui {
                 g.drawImage(background,0,0,null);
                 Graphics2D g2=(Graphics2D)g;
                 g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-                 
+
                 //Voeg hier je tekenwerk toe
-                drawCirkel(g2);
                 drawLokalen(g2);
                 drawDeuren(g2);
                 drawInformatiePunten(g2);
+                drawCirkel(g2);
             }
 
             //Het kan nuttig zijn om je tekenwerk op te splitsen en hier methoden toe te voegen om specifieke zaken te tekenen
             private void drawLokalen(Graphics2D g2) {
-                g2.setColor(new Color(255,0,0));
+                g2.setColor(LOKAAL_KLEUR);
+                g2.setStroke(new BasicStroke(8));
                 g2.drawRect(4, 226, 1000,  88);
+                try {
+                    List<Lokaal> lokalen = LokaalService.getLokalen();
+                    for (Lokaal l: lokalen) {
+                        g2.drawRect(l.getX(), l.getY(), l.getBreedte(), l.getLengte());
+                    }
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
             }
 
             private void drawDeuren(Graphics2D g2) {
                 try {
-                    g2.setColor(new Color(0,255,0));
+                    g2.setColor(DEUR_KLEUR);
+                    g2.setStroke(new BasicStroke(8));
                     List<Deur> deuren = DeurService.getDeuren();
                     for (Deur d : deuren) {
                         g2.drawRect(
@@ -167,20 +249,26 @@ public class EloictSimGui {
                 } catch (SQLException e) {
                     e.printStackTrace();
                 }
-
             }
 
             private void drawCirkel(Graphics2D g2) {
-                g2.setColor(new Color(31,65,107));
+                g2.setColor(SPELER_KLEUR);
                 g2.fillOval(x-(straal+2), y-(straal+2), 2*(straal+2), 2*(straal+2)); //todo:startpunt aanpassen+overlap
             }
 
-            private static void drawInformatiePunten(Graphics2D g2) {
+            private void drawInformatiePunten(Graphics2D g2) {
                 try {
                     List<Informatiepunt> informatiepunten = InformatiepuntService.getInformatiepunten();
                     for (Informatiepunt p: informatiepunten) {
-                        g2.setColor(new Color(107,65,31));
-                        g2.fillRect(p.getX(), p.getY(), 32, 32);
+                        if (p.isPersoon()) {
+                            if (p.getPersoon() instanceof Student s) {
+                                g2.drawImage(studentKlein, p.getX(), p.getY(), null);
+                            } else if (p.getPersoon() instanceof Docent d){
+                                g2.drawImage(docentKlein, p.getX(), p.getY(), null);
+                            }
+                        } else if (p.isLokaal()) {
+                            g2.drawImage(lokaalKlein ,p.getX(), p.getY(), null);
+                        }
                     }
                 } catch (SQLException e) {
                     e.printStackTrace();
@@ -189,13 +277,6 @@ public class EloictSimGui {
         };
     }
 
-
-
-
-    private static void moveCircle() {
-        x = x+1;
-        y = y+1;
-    }
 
     private static Image laadAfbeelding(String bestand) {
         try {
